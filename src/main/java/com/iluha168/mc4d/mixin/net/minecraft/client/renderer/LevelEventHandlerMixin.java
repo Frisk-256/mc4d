@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.LevelEventHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ShriekParticleOption;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -69,6 +70,29 @@ class LevelEventHandlerMixin {
 			? Vec4i.getW(pos) + random.nextDouble() * 0.6 + 0.2 // REDSTONE_TORCH_BURNOUT
 			: Vec4i.getW(pos) + (5.0 + random.nextDouble() * 6.0) / 16.0; // END_PORTAL_FRAME_FILL
 		((LevelAccessor4) instance).addParticle(particle, x, y, z, w, xd, yd, zd, zd);
+	}
+
+	// TODO levelEvent
+
+	@Definition(id = "addParticle", method = "Lnet/minecraft/client/multiplayer/ClientLevel;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V")
+	@Definition(id = "ShriekParticleOption", type = ShriekParticleOption.class)
+	@Expression("?.addParticle(new ShriekParticleOption(?), ?, ?, ?, ?, ?, ?)")
+	@Redirect(method = "levelEvent", at = @At("MIXINEXTRAS:EXPRESSION"))
+	void levelEvent_3007_addParticle(
+		ClientLevel instance, ParticleOptions particle, double x, double y, double z, double xd, double yd, double zd,
+		@Local(argsOnly = true, name = "pos") BlockPos pos
+	) {
+		((LevelAccessor4) instance).addParticle(particle, x, y, z, Vec4i.getW(pos) + 0.5, xd, yd, zd, zd);
+	}
+	@Definition(id = "playLocalSound", method = "Lnet/minecraft/client/multiplayer/ClientLevel;playLocalSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZ)V")
+	@Definition(id = "SCULK_SHRIEKER_SHRIEK", field = "Lnet/minecraft/sounds/SoundEvents;SCULK_SHRIEKER_SHRIEK:Lnet/minecraft/sounds/SoundEvent;")
+	@Expression("?.playLocalSound(?, ?, ?, SCULK_SHRIEKER_SHRIEK, ?, ?, ?, ?)")
+	@Redirect(method = "levelEvent", at = @At("MIXINEXTRAS:EXPRESSION"))
+	void levelEvent_3007_playLocalSound(
+		ClientLevel instance, double x, double y, double z, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay,
+		@Local(argsOnly = true, name = "pos") BlockPos pos
+	) {
+		((Level4) instance).playLocalSound(x, y, z, Vec4i.getW(pos) + 0.5, sound, source, volume, pitch, distanceDelay);
 	}
 
 	// TODO levelEvent

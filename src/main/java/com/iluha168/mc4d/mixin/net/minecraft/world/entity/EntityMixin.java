@@ -36,6 +36,7 @@ import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.VecDeltaCodec;
@@ -647,6 +648,14 @@ public class EntityMixin implements Entity4 {
 	))
 	Vec3 collide_stepFromGround(Vec3 instance, double x, double y, double z) {
 		return ((Vec4) instance).subtract(x, y, z, z);
+	}
+
+	@Redirect(method = "lambda$checkInsideBlocks$0", at = @At(
+		value = "NEW",
+		target = "(Lnet/minecraft/core/Vec3i;)Lnet/minecraft/world/phys/Vec3;"
+	))
+	Vec3 checkInsideBlocks(Vec3i vec) {
+		return new Vec4(vec);
 	}
 
 	@ModifyArg(method = "waterSwimSound", at = @At(
