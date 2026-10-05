@@ -1,7 +1,7 @@
 package com.iluha168.mc4d.mixin.net.minecraft.client.particle;
 
-import com.iluha168.mc4d.client.particle.BaseAshSmokeParticle4;
-import com.iluha168.mc4d.client.particle.ParticleProvider4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.BaseAshSmokeParticle4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.ParticleProvider4;
 import com.iluha168.mc4d.util.Err4;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(SmokeParticle.class)
-class SmokeParticleMixin {
+abstract class SmokeParticleMixin extends BaseAshSmokeParticleMixin {
 	@Mixin(SmokeParticle.Provider.class)
 	static class ProviderMixin implements ParticleProvider4<SimpleParticleType> {
 		@Shadow
@@ -33,8 +33,7 @@ class SmokeParticleMixin {
 		@Override
 		public @Nullable Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double w, double xAux, double yAux, double zAux, double wAux, RandomSource random) {
 			SmokeParticle particle = new SmokeParticle(level, x, y, z, xAux, yAux, zAux, 1.0F, this.sprites);
-			//noinspection DataFlowIssue
-			((BaseAshSmokeParticle4) particle).init_finish(w, 0.1F, wAux);
+			((BaseAshSmokeParticle4) particle).init_finish(w, 0.1F, 0.1F, 0.1F, 0.1F, xAux, yAux, zAux, wAux);
 			return particle;
 		}
 	}

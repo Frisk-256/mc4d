@@ -1,7 +1,7 @@
 package com.iluha168.mc4d.mixin.net.minecraft.client.particle;
 
-import com.iluha168.mc4d.client.particle.BaseAshSmokeParticle4;
-import com.iluha168.mc4d.client.particle.ParticleProvider4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.BaseAshSmokeParticle4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.ParticleProvider4;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -19,7 +19,7 @@ abstract class WhiteSmokeParticleMixin extends BaseAshSmokeParticleMixin {
 		public @Nullable Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double w, double xAux, double yAux, double zAux, double wAux, RandomSource random) {
 			Particle particle = this.createParticle(options, level, x, y, z, xAux, yAux, zAux, random);
 			//noinspection DataFlowIssue
-			((BaseAshSmokeParticle4) particle).init_finish(w, 0.1F, wAux);
+			((BaseAshSmokeParticle4) particle).init_finish(w, 0.1F, 0.1F, 0.1F, 0.1F, xAux, yAux, zAux, wAux);
 			return particle;
 		}
 	}

@@ -1,7 +1,7 @@
 package com.iluha168.mc4d.mixin.net.minecraft.client.particle;
 
-import com.iluha168.mc4d.client.particle.Particle4;
-import com.iluha168.mc4d.client.particle.ParticleProvider4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.Particle4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.ParticleProvider4;
 import com.iluha168.mc4d.util.Err4;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.DustParticle;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(DustParticle.class)
-class DustParticleMixin {
+abstract class DustParticleMixin extends DustParticleBaseMixin {
 	@Mixin(DustParticle.Provider.class)
 	static class ProviderMixin implements ParticleProvider4<DustParticleOptions> {
 		@Shadow
@@ -34,7 +34,7 @@ class DustParticleMixin {
 		public @Nullable Particle createParticle(DustParticleOptions options, ClientLevel level, double x, double y, double z, double w, double xAux, double yAux, double zAux, double wAux, RandomSource random) {
 			DustParticle particle = new DustParticle(level, x, y, z, xAux, yAux, zAux, options, this.sprites);
 			//noinspection DataFlowIssue
-			((Particle4) particle).init_finish(w, wAux);
+			((Particle4) particle).init_finish(w, xAux, yAux, zAux, wAux);
 			return particle;
 		}
 	}

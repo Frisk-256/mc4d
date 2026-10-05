@@ -1,7 +1,7 @@
 package com.iluha168.mc4d.mixin.net.minecraft.world.phys.shapes;
 
+import com.iluha168.mc4d.api.net.minecraft.world.phys.shapes.DiscreteVoxelShape4;
 import com.iluha168.mc4d.util.Err4;
-import com.iluha168.mc4d.world.phys.shapes.DiscreteVoxelShape4;
 import net.minecraft.world.phys.shapes.BitSetDiscreteVoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BitSetDiscreteVoxelShapeMixin {
 	@Inject(method = "<init>*", at = @At("TAIL"))
 	void banBaseClass(int xSize, int ySize, int zSize, CallbackInfo ci) {
-		if (!DiscreteVoxelShape4.UNSAFE_DISABLE_3D_ERRORS) {
+		if (!DiscreteVoxelShape4.__unsafe_3DErrorsDisabled()) {
 			throw Err4.arguments3("BitSetDiscreteVoxelShape4::new");
 		}
 	}

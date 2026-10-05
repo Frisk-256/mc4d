@@ -1,25 +1,25 @@
 package com.iluha168.mc4d.mixin.net.minecraft.client.multiplayer;
 
-import com.iluha168.mc4d.client.color.block.BlockTintCache4;
-import com.iluha168.mc4d.client.multiplayer.ClientLevel4;
-import com.iluha168.mc4d.client.particle.Particle4;
-import com.iluha168.mc4d.client.particle.ParticleEngine4;
-import com.iluha168.mc4d.client.particle.TerrainParticle4;
-import com.iluha168.mc4d.client.renderer.LevelRenderer4;
-import com.iluha168.mc4d.client.resources.sounds.SimpleSoundInstance4;
-import com.iluha168.mc4d.core.BlockPos4;
-import com.iluha168.mc4d.core.Cursor4D;
-import com.iluha168.mc4d.core.Direction4;
-import com.iluha168.mc4d.core.Vec4i;
+import com.iluha168.mc4d.api.net.minecraft.client.color.block.BlockTintCache4;
+import com.iluha168.mc4d.api.net.minecraft.client.multiplayer.ClientLevel4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.Particle4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.ParticleEngine4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.TerrainParticle4;
+import com.iluha168.mc4d.api.net.minecraft.client.renderer.LevelRenderer4;
+import com.iluha168.mc4d.api.net.minecraft.client.resources.sounds.SimpleSoundInstance4;
+import com.iluha168.mc4d.api.net.minecraft.core.BlockPos4;
+import com.iluha168.mc4d.api.net.minecraft.core.Cursor4D;
+import com.iluha168.mc4d.api.net.minecraft.core.Direction4;
+import com.iluha168.mc4d.api.net.minecraft.core.Vec4i;
+import com.iluha168.mc4d.api.net.minecraft.world.entity.Entity4;
+import com.iluha168.mc4d.api.net.minecraft.world.level.ChunkPos4;
+import com.iluha168.mc4d.api.net.minecraft.world.level.ColorResolver4;
+import com.iluha168.mc4d.api.net.minecraft.world.level.storage.LevelData4;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.AABB4;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.Vec4;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.shapes.VoxelShape4;
 import com.iluha168.mc4d.mixin.net.minecraft.world.level.LevelMixin;
 import com.iluha168.mc4d.util.Err4;
-import com.iluha168.mc4d.world.entity.Entity4;
-import com.iluha168.mc4d.world.level.ChunkPos4;
-import com.iluha168.mc4d.world.level.ColorResolver4;
-import com.iluha168.mc4d.world.level.storage.LevelData4;
-import com.iluha168.mc4d.world.phys.AABB4;
-import com.iluha168.mc4d.world.phys.Vec4;
-import com.iluha168.mc4d.world.phys.shapes.VoxelShape4;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -31,6 +31,9 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockTintCache;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.FireworkParticles;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.TerrainParticle;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -68,7 +71,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -305,8 +307,11 @@ class ClientLevelMixin extends LevelMixin implements ClientLevel4 {
 				this.addParticle(ParticleTypes.POOF, x, y, z, w, this.random.nextGaussian() * 0.05, 0.005, this.random.nextGaussian() * 0.05, this.random.nextGaussian() * 0.05);
 			}
 		} else {
-			throw new NotImplementedException();
-			// TODO this.minecraft.particleEngine.add(new FireworkParticles.Starter(this, x, y, z, xd, yd, zd, this.minecraft.particleEngine, explosions));
+			final ParticleEngine particleEngine = this.minecraft.particleEngine;
+			final Particle starter = new FireworkParticles.Starter((ClientLevel) (Object) this, x, y, z, xd, yd, zd, particleEngine, explosions);
+			//noinspection DataFlowIssue
+			((Particle4) starter).init_finish(w, xd, yd, zd, wd);
+			particleEngine.add(starter);
 		}
 	}
 
@@ -523,7 +528,7 @@ class ClientLevelMixin extends LevelMixin implements ClientLevel4 {
 			wp = w + shape4.maxW + 0.1F;
 		}
 
-		((Particle4) original).init_finish(wp, 0.0);
+		((Particle4) original).init_finish(wp, 0.0, 0.0, 0.0, 0.0);
 		return original;
 	}
 

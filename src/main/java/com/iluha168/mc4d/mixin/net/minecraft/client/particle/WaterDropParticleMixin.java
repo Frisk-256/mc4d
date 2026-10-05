@@ -1,11 +1,11 @@
 package com.iluha168.mc4d.mixin.net.minecraft.client.particle;
 
-import com.iluha168.mc4d.client.particle.Particle4;
-import com.iluha168.mc4d.client.particle.ParticleProvider4;
-import com.iluha168.mc4d.core.BlockPos4;
-import com.iluha168.mc4d.core.Vec4i;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.Particle4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.ParticleProvider4;
+import com.iluha168.mc4d.api.net.minecraft.core.BlockPos4;
+import com.iluha168.mc4d.api.net.minecraft.core.Vec4i;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.shapes.VoxelShape4;
 import com.iluha168.mc4d.util.Err4;
-import com.iluha168.mc4d.world.phys.shapes.VoxelShape4;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -39,8 +39,8 @@ abstract class WaterDropParticleMixin extends SingleQuadParticleMixin {
 	void init_postpone_zd(WaterDropParticle instance, double value) {}
 
 	@Override
-	public void init_finish(double w, double wa) {
-		super.init_finish(w, 0.0);
+	public void init_finish(double w, double xa, double ya, double za, double wa) {
+		super.init_finish(w, 0.0, 0.0, 0.0, 0.0);
 		this.xd *= 0.3F;
 		this.yd = this.random.nextFloat() * 0.2F + 0.1F;
 		this.zd *= 0.3F;
@@ -101,7 +101,7 @@ abstract class WaterDropParticleMixin extends SingleQuadParticleMixin {
 		@Override
 		public @Nullable Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double w, double xAux, double yAux, double zAux, double wAux, RandomSource random) {
 			WaterDropParticle particle = new WaterDropParticle(level, x, y, z, this.sprite.get(random));
-			((Particle4) particle).init_finish(w, 0.0);
+			((Particle4) particle).init_finish(w, 0.0, 0.0, 0.0, 0.0);
 			return particle;
 		}
 	}

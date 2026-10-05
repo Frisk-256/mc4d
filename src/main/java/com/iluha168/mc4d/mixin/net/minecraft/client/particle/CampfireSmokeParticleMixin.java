@@ -1,7 +1,7 @@
 package com.iluha168.mc4d.mixin.net.minecraft.client.particle;
 
-import com.iluha168.mc4d.client.particle.Particle4;
-import com.iluha168.mc4d.client.particle.ParticleProvider4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.Particle4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.ParticleProvider4;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(CampfireSmokeParticle.class)
 abstract class CampfireSmokeParticleMixin extends SingleQuadParticleMixin {
 	@Override
-	public void init_finish(double w, double wa) {
+	public void init_finish(double w, double xa, double ya, double za, double wa) {
 		super.init_finish(w);
 		this.wd = wa;
 	}
@@ -50,7 +50,7 @@ abstract class CampfireSmokeParticleMixin extends SingleQuadParticleMixin {
 		public @Nullable Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double w, double xAux, double yAux, double zAux, double wAux, RandomSource random) {
 			Particle particle = this.createParticle(options, level, x, y, z, xAux, yAux, zAux, random);
 			//noinspection DataFlowIssue
-			((Particle4) particle).init_finish(w, wAux);
+			((Particle4) particle).init_finish(w, xAux, yAux, zAux, wAux);
 			return particle;
 		}
 	}

@@ -1,10 +1,10 @@
 package com.iluha168.mc4d.mixin.net.minecraft.client.particle;
 
-import com.iluha168.mc4d.client.particle.Particle4;
-import com.iluha168.mc4d.client.particle.ParticleProvider4;
-import com.iluha168.mc4d.core.BlockPos4;
-import com.iluha168.mc4d.world.level.Level4;
-import com.iluha168.mc4d.world.level.LevelAccessor4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.Particle4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.ParticleProvider4;
+import com.iluha168.mc4d.api.net.minecraft.core.BlockPos4;
+import com.iluha168.mc4d.api.net.minecraft.world.level.Level4;
+import com.iluha168.mc4d.api.net.minecraft.world.level.LevelAccessor4;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -65,6 +65,7 @@ abstract class DripParticleMixin extends SingleQuadParticleMixin {
 		void preMoveUpdate(ClientLevel instance, ParticleOptions particle, double x, double y, double z, double xd, double yd, double zd) {
 			((LevelAccessor4) instance).addParticle(particle, x, y, z, this.w(), xd, yd, zd, this.wd);
 		}
+
 		@Inject(method = "postMoveUpdate", at = @At("HEAD"))
 		void postMoveUpdate(CallbackInfo ci) {
 			this.wd = this.wd() * 0.02;

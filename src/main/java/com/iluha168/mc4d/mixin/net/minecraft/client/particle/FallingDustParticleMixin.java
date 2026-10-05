@@ -1,8 +1,8 @@
 package com.iluha168.mc4d.mixin.net.minecraft.client.particle;
 
-import com.iluha168.mc4d.client.particle.Particle4;
-import com.iluha168.mc4d.client.particle.ParticleProvider4;
-import com.iluha168.mc4d.core.BlockPos4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.Particle4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.ParticleProvider4;
+import com.iluha168.mc4d.api.net.minecraft.core.BlockPos4;
 import com.iluha168.mc4d.util.Err4;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
@@ -33,14 +33,14 @@ abstract class FallingDustParticleMixin extends SingleQuadParticleMixin {
 	@Definition(id = "zo", field = "Lnet/minecraft/client/particle/FallingDustParticle;zo:D")
 	@Expression("this.zo = @(?)")
 	@Inject(method = "tick", at = @At("MIXINEXTRAS:EXPRESSION"))
-	void tick(CallbackInfo ci) {
+	void tick_wo(CallbackInfo ci) {
 		this.wo = this.w();
 	}
 	@Redirect(method = "tick", at = @At(
 		value = "INVOKE",
 		target = "Lnet/minecraft/client/particle/FallingDustParticle;move(DDD)V"
 	))
-	void tick(FallingDustParticle instance, double x, double y, double z) {
+	void tick_move(FallingDustParticle instance, double x, double y, double z) {
 		((Particle4) instance).move(x, y, z, this.wd);
 	}
 

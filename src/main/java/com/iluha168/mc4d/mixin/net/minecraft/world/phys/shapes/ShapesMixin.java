@@ -1,15 +1,15 @@
 package com.iluha168.mc4d.mixin.net.minecraft.world.phys.shapes;
 
 import com.google.common.collect.Maps;
-import com.iluha168.mc4d.core.Direction4;
-import com.iluha168.mc4d.math.OctahedralGroup4;
+import com.iluha168.mc4d.api.com.mojang.math.OctahedralGroup4;
+import com.iluha168.mc4d.api.net.minecraft.core.Direction4;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.AABB4;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.Vec4;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.shapes.ArrayVoxelShape4;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.shapes.BitSetDiscreteVoxelShape4;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.shapes.DiscreteVoxelShape4;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.shapes.Shapes4;
 import com.iluha168.mc4d.util.Err4;
-import com.iluha168.mc4d.world.phys.AABB4;
-import com.iluha168.mc4d.world.phys.Vec4;
-import com.iluha168.mc4d.world.phys.shapes.ArrayVoxelShape4;
-import com.iluha168.mc4d.world.phys.shapes.BitSetDiscreteVoxelShape4;
-import com.iluha168.mc4d.world.phys.shapes.DiscreteVoxelShape4;
-import com.iluha168.mc4d.world.phys.shapes.Shapes4;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.math.OctahedralGroup;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
@@ -60,12 +60,7 @@ public class ShapesMixin {
 
 	@Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(III)Lnet/minecraft/world/phys/shapes/BitSetDiscreteVoxelShape;", ordinal = 0))
 	private static BitSetDiscreteVoxelShape EMPTY(int xSize, int ySize, int zSize) {
-		try {
-			DiscreteVoxelShape4.UNSAFE_DISABLE_3D_ERRORS = true;
-			return new BitSetDiscreteVoxelShape(xSize, ySize, zSize);
-		} finally {
-			DiscreteVoxelShape4.UNSAFE_DISABLE_3D_ERRORS = false;
-		}
+		return BitSetDiscreteVoxelShape4.__unsafe_new3D(xSize, ySize, zSize);
 	}
 
 	@Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(Lnet/minecraft/world/phys/shapes/DiscreteVoxelShape;Lit/unimi/dsi/fastutil/doubles/DoubleList;Lit/unimi/dsi/fastutil/doubles/DoubleList;Lit/unimi/dsi/fastutil/doubles/DoubleList;)Lnet/minecraft/world/phys/shapes/ArrayVoxelShape;"))

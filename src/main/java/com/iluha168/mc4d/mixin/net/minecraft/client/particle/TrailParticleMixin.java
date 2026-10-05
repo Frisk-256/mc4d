@@ -1,8 +1,8 @@
 package com.iluha168.mc4d.mixin.net.minecraft.client.particle;
 
-import com.iluha168.mc4d.client.particle.Particle4;
-import com.iluha168.mc4d.client.particle.ParticleProvider4;
-import com.iluha168.mc4d.world.phys.Vec4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.Particle4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.ParticleProvider4;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.Vec4;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -53,7 +53,7 @@ abstract class TrailParticleMixin extends SingleQuadParticleMixin {
 			RandomSource random
 		) {
 			final Particle particle = this.createParticle(options, level, x, y, z, xAux, yAux, zAux, random);
-			((Particle4) particle).init_finish(w, wAux);
+			((Particle4) particle).init_finish(w, xAux, yAux, zAux, wAux);
 			return particle;
 		}
 	}

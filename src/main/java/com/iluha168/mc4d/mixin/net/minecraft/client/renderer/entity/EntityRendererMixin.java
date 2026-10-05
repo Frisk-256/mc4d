@@ -1,15 +1,17 @@
 package com.iluha168.mc4d.mixin.net.minecraft.client.renderer.entity;
 
-import com.iluha168.mc4d.client.renderer.entity.EntityRenderer4;
-import com.iluha168.mc4d.client.renderer.entity.state.EntityRenderState4;
-import com.iluha168.mc4d.core.BlockPos4;
+import com.iluha168.mc4d.MC4DClient;
+import com.iluha168.mc4d.api.net.minecraft.client.renderer.entity.EntityRenderer4;
+import com.iluha168.mc4d.api.net.minecraft.client.renderer.entity.state.EntityRenderState4;
+import com.iluha168.mc4d.api.net.minecraft.core.BlockPos4;
+import com.iluha168.mc4d.api.net.minecraft.world.entity.Entity4;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.AABB4;
+import com.iluha168.mc4d.api.net.minecraft.world.phys.Vec4;
 import com.iluha168.mc4d.util.Err4;
-import com.iluha168.mc4d.world.entity.Entity4;
-import com.iluha168.mc4d.world.phys.AABB4;
-import com.iluha168.mc4d.world.phys.Vec4;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -48,9 +50,9 @@ abstract class EntityRendererMixin<T extends Entity, S extends EntityRenderState
 		value = "INVOKE",
 		target = "Lnet/minecraft/core/BlockPos$MutableBlockPos;set(III)Lnet/minecraft/core/BlockPos$MutableBlockPos;"
 	))
-	BlockPos.MutableBlockPos extractShadow(BlockPos.MutableBlockPos instance, int x, int y, int z) {
-		// TODO use actual W value for 4D renderer
-		return ((BlockPos4.MutableBlockPos) instance).set(x, y, z, 0);
+	BlockPos.MutableBlockPos extractShadow(BlockPos.MutableBlockPos instance, int x, int y, int z, @Local(argsOnly = true, name = "state") S state) {
+		// TODO extract a spherical shadow when 4D renderer
+		return ((BlockPos4.MutableBlockPos) instance).set(x, y, z, Mth.floor(((EntityRenderState4) state).w()));
 	}
 
 	// TODO everything else
@@ -70,9 +72,9 @@ abstract class EntityRendererMixin<T extends Entity, S extends EntityRenderState
 		if (!this.affectedByCulling(entity)) {
 			return true;
 		}
-		// Inflating W would render the model 0.5 wider than its actual hitbox.
 		// TODO: return inflate(0.5) when 4D renderer
-		AABB boundingBox = ((AABB4) this.getBoundingBoxForCulling(entity)).inflate(0.5, 0.5, 0.5, 0);
+		final double dwMax = Minecraft.getInstance().debugEntries.isCurrentlyEnabled(MC4DClient.NEIGHBOURING_SLICE_ENTITY_RENDERER) ? 1 : 0;
+		AABB boundingBox = ((AABB4) this.getBoundingBoxForCulling(entity)).inflate(0.5, 0.5, 0.5, dwMax);
 		if (boundingBox.hasNaN() || boundingBox.getSize() == 0.0) {
 			boundingBox = new AABB4(
 				entity.getX() - 2.0,

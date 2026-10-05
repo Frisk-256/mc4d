@@ -1,7 +1,7 @@
 package com.iluha168.mc4d.mixin.net.minecraft.client.particle;
 
-import com.iluha168.mc4d.client.particle.Particle4;
-import com.iluha168.mc4d.client.particle.ParticleProvider4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.Particle4;
+import com.iluha168.mc4d.api.net.minecraft.client.particle.ParticleProvider4;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SuspendedParticle;
@@ -21,8 +21,11 @@ abstract class SuspendedParticleMixin extends SingleQuadParticleMixin {
 		@Override
 		public @Nullable Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double w, double xAux, double yAux, double zAux, double wAux, RandomSource random) {
 			Particle particle = this.createParticle(options, level, x, y, z, xAux, yAux, zAux, random);
+			final double xa = random.nextGaussian() * 1.0E-6F;
+			final double ya = random.nextGaussian() * 1.0E-4F;
+			final double za = random.nextGaussian() * 1.0E-6F;
 			final double wa = random.nextGaussian() * 1.0E-6F;
-			((Particle4) particle).init_finish(w, wa);
+			((Particle4) particle).init_finish(w, xa, ya, za, wa);
 			return particle;
 		}
 	}
@@ -35,7 +38,7 @@ abstract class SuspendedParticleMixin extends SingleQuadParticleMixin {
 		@Override
 		public @Nullable Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double w, double xAux, double yAux, double zAux, double wAux, RandomSource random) {
 			Particle particle = this.createParticle(options, level, x, y, z, xAux, yAux, zAux, random);
-			((Particle4) particle).init_finish(w, 0.0);
+			((Particle4) particle).init_finish(w, 0.0, -0.8F, 0.0, 0.0);
 			return particle;
 		}
 	}
@@ -61,7 +64,7 @@ abstract class SuspendedParticleMixin extends SingleQuadParticleMixin {
 		@Override
 		public @Nullable Particle createParticle(SimpleParticleType options, ClientLevel level, double x, double y, double z, double w, double xAux, double yAux, double zAux, double wAux, RandomSource random) {
 			Particle particle = this.createParticle(options, level, x, y, z, xAux, yAux, zAux, random);
-			((Particle4) particle).init_finish(w, 0.0);
+			((Particle4) particle).init_finish(w, 0.0, random.nextFloat() * -1.9 * random.nextFloat() * 0.1, 0.0, 0.0);
 			return particle;
 		}
 	}
